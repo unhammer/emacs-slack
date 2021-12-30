@@ -114,7 +114,7 @@
     (string= mode "tombstone")))
 
 (cl-defmethod slack-file-summary ((file slack-file) _ts team)
-  (with-slots (mode permalink) file
+  (with-slots (mode permalink url-private) file
     (if (slack-file-deleted-p file)
         "This file was deleted."
       (let ((type (slack-file-type file))
@@ -123,7 +123,7 @@
                 type
                 (slack-file-link-info (oref file id)
                                       (slack-unescape title team))
-                permalink)))))
+                url-private)))))
 
 (defvar slack-expand-email-keymap
   (let ((map (make-sparse-keymap)))
