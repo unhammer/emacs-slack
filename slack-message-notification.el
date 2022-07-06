@@ -81,6 +81,7 @@
                              (and (slack-usergroup-include-user-p
                                    usergroup
                                    (plist-get (oref team self) :id))
+                                  (not (string-empty-p (oref usergroup handle)))
                                   (string-match
                                    (concat "@" (oref usergroup handle))
                                    body)))
