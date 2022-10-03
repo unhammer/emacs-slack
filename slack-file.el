@@ -492,7 +492,7 @@
           (floor (* 0.9 (frame-pixel-width))))))
 
 (defun slack-file-link-info (file-id text)
-  (propertize text
+  (propertize (or text "(no file text)")
               'file file-id
               'face '(:underline t :weight bold)
               'keymap slack-file-link-keymap))
