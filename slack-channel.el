@@ -72,5 +72,15 @@
 (cl-defmethod slack-room-member-p ((this slack-channel))
   (oref this is-member))
 
+(cl-defmethod slack-room-name ((room slack-channel) team)
+  (cond
+   ((slack-mpim-p room)
+    (format "MPIM: %s"
+            (string-join (mapcar (lambda (userid)
+                                   (slack-user-name userid team))
+                                 (slack-room-members room))
+                         ", " )))
+   (t (oref room name))))
+
 (provide 'slack-channel)
 ;;; slack-channel.el ends here

@@ -1,4 +1,4 @@
-;;; package --- Summary
+;;; slack-user-message.el --- -*- lexical-binding: t; -*-
 ;;; Commentary:
 
 ;;; Code:
