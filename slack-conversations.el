@@ -284,7 +284,9 @@
                       (cons "user" (plist-get user :id)))
         :success (slack-conversations-success-handler team))))))
 
+(defvar slack-loop-count 0)
 (defun slack-conversations-list (team success-callback &optional types)
+  (setq slack-loop-count 0)
   (let ((cursor nil)
         (channels nil)
         (groups nil)
@@ -311,12 +313,15 @@
            (slack-if-let*
                ((meta (plist-get data :response_metadata))
                 (next-cursor (plist-get meta :next_cursor))
-                (has-cursor (< 0 (length next-cursor))))
+                (has-cursor (< 0 (length next-cursor)))
+                (not-too-much (< slack-loop-count 60)))
                (progn
                  (setq cursor next-cursor)
-                 (request))
-             (funcall success-callback
-                      channels groups ims))))
+                 (setq slack-loop-count (1+ slack-loop-count))
+                 (run-at-time (* 0.2 (log slack-loop-count)) nil (lambda () (request))))
+             (progn
+               (funcall success-callback
+                        channels groups ims)))))
          (request ()
            (slack-request
             (slack-request-create
