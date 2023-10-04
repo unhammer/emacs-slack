@@ -100,7 +100,7 @@
 (defun slack-room-select (rooms team)
   (let* ((alist (slack-room-names
                  rooms team #'(lambda (rs) (cl-remove-if #'slack-room-hidden-p rs)))))
-    (slack-select-from-list (alist "Select Channel: "))))
+    (slack-select-from-list (alist (format "%s – Channel: " (slack-team-name team))))))
 
 (defun slack-room-find-message (room ts)
   (with-slots (messages) room
