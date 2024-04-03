@@ -49,12 +49,18 @@
   (string= (oref m user) sender-id))
 
 (cl-defmethod slack-message-user-status ((this slack-user-message) team)
-  (slack-user-status (slack-message-sender-id this)
-                     team))
+  (if (slot-boundp this 'user)
+      (slack-user-status (slack-message-sender-id this)
+                         team)
+    ""))
 
 (cl-defmethod slack-user-find ((this slack-user-message) team)
-  (let ((user-id (slack-message-sender-id this)))
-    (slack-user--find user-id team)))
+  (if (slot-boundp this 'user)
+      (let ((user-id (slack-message-sender-id this)))
+        (slack-user--find user-id team))
+    (slack-log (format "No user found: %s" this)
+               team
+               :level 'warn)))
 
 (cl-defmethod slack-message-profile-image ((m slack-user-message) team)
   (slack-user-image (slack-user-find m team) team))
